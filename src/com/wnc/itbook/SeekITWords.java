@@ -17,8 +17,12 @@ import translate.site.baidu.BaiduWordTranslate;
 public class SeekITWords {
 	public static void main(String[] args) {
 		DbExecMgr.refreshCon("jdbc:sqlite:D:/database/itdict.db");
+		int i = 0;
 		List<String> readFrom = FileOp.readFrom("D:/用户目录/workspace-sts/ITBookTools/aggrev.txt");
 		for (String string : readFrom) {
+			if (i++ < 9500) {
+				continue;
+			}
 			if (!DbExecMgr.isExistData("SELECT * FROM DICTIONARY WHERE TOPIC_WORD='" + string.split(" ")[0] + "'"))
 				seek(string);
 		}
@@ -69,7 +73,7 @@ public class SeekITWords {
 					+ ")";
 			System.out.println(sql);
 			DbExecMgr.execOnlyOneUpdate(sql);
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -79,19 +83,20 @@ public class SeekITWords {
 		try {
 			WordExchange wordExchange = baiduWordTranslate.getWordExchange();
 			System.out.println(wordExchange);
-			if (wordExchange != null && (StringUtils.isNotBlank(wordExchange.getWord_done())
-					|| StringUtils.isNotBlank(wordExchange.getWord_done())
-					|| StringUtils.isNotBlank(wordExchange.getWord_er())
-					|| StringUtils.isNotBlank(wordExchange.getWord_est())
-					|| StringUtils.isNotBlank(wordExchange.getWord_ing())
-					|| StringUtils.isNotBlank(wordExchange.getWord_past())
-					|| StringUtils.isNotBlank(wordExchange.getWord_pl())
-					|| StringUtils.isNotBlank(wordExchange.getWord_third()))) {
+			if (wordExchange != null
+					&& (isNotNull(wordExchange.getWord_done()) || isNotNull(wordExchange.getWord_done())
+							|| isNotNull(wordExchange.getWord_er()) || isNotNull(wordExchange.getWord_est())
+							|| isNotNull(wordExchange.getWord_ing()) || isNotNull(wordExchange.getWord_past())
+							|| isNotNull(wordExchange.getWord_pl()) || isNotNull(wordExchange.getWord_third()))) {
 				DictionaryDao.insertExchange(word, wordExchange);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static boolean isNotNull(String str) {
+		return StringUtils.isNotBlank(str) && !str.equals("null");
 	}
 
 	private static String getOrigin(BaiduWordTranslate baiduWordTranslate) throws Exception {
