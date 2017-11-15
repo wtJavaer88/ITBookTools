@@ -14,7 +14,7 @@ import com.wnc.basic.BasicStringUtil;
 
 public final class DBconnectionMgr
 {
-    static final Logger _$1 = Logger.getLogger("database.DBconnectionMgr");
+    static final Logger _$1 = Logger.getLogger( DBconnectionMgr.class );
 
     private static Map<String, Vector> _$vectors = new HashMap<String, Vector>();
     private static Vector _$vector;
@@ -46,18 +46,16 @@ public final class DBconnectionMgr
         Connection localConnection = null;
         try
         {
-            Class.forName(_$6);
-            localConnection = DriverManager.getConnection(_$7);
-        }
-        catch (ClassNotFoundException e)
+            Class.forName( _$6 );
+            localConnection = DriverManager.getConnection( _$7 );
+        } catch ( ClassNotFoundException e )
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-        catch (SQLException localSQLException)
+        } catch ( SQLException localSQLException )
         {
-            _$1.error("createConnection()  is SQLException:"
-                    + localSQLException.getMessage());
+            _$1.error( "createConnection()  is SQLException:"
+                    + localSQLException.getMessage() );
 
             return null;
         }
@@ -67,55 +65,53 @@ public final class DBconnectionMgr
 
     public static synchronized Connection getConnection()
     {
-        if(_$vector == null)
+        if ( _$vector == null )
         {
             return null;
         }
         Connection localConnection1 = null;
 
-        synchronized (_$vectors)
+        synchronized ( _$vectors )
         {
             Connection localConnection2;
-            if(!_$3 && (!initConnection()))
+            if ( !_$3 && (!initConnection()) )
             {
-                _$1.error("getConnection()  initConnection is Err.");
+                _$1.error( "getConnection()  initConnection is Err." );
                 localConnection2 = null;
                 return localConnection2;
             }
 
-            if(_$vector.size() > 0)
+            if ( _$vector.size() > 0 )
             {
-                while (_$vector.size() > _$9)
+                while ( _$vector.size() > _$9 )
                 {
-                    Connection localConnection3 = (Connection) _$vector
-                            .remove(0);
+                    Connection localConnection3 = (Connection)_$vector
+                            .remove( 0 );
                     try
                     {
-                        if((localConnection3 != null)
-                                && (!localConnection3.isClosed()))
+                        if ( (localConnection3 != null)
+                                && (!localConnection3.isClosed()) )
                         {
                             try
                             {
-                                if(!localConnection3.getAutoCommit())
+                                if ( !localConnection3.getAutoCommit() )
                                 {
                                     localConnection3.rollback();
                                 }
-                            }
-                            catch (Exception localException2)
+                            } catch ( Exception localException2 )
                             {
                             }
                             localConnection3.close();
                             localConnection3 = null;
                         }
-                    }
-                    catch (Exception localException1)
+                    } catch ( Exception localException1 )
                     {
-                        _$1.error("数据库异常！" + localException1.getMessage());
+                        _$1.error( "数据库异常！" + localException1.getMessage() );
                     }
 
                 }
 
-                if(((localConnection1 = (Connection) _$vector.remove(0)) != null))
+                if ( ((localConnection1 = (Connection)_$vector.remove( 0 )) != null) )
                 {
                 }
 
@@ -123,40 +119,37 @@ public final class DBconnectionMgr
                 return localConnection2;
             }
 
-            if((localConnection1 = createConnection()) == null)
+            if ( (localConnection1 = createConnection()) == null )
             {
-                _$1.error("数据库异常！getConnection()  initConnection is Empty.");
+                _$1.error( "数据库异常！getConnection()  initConnection is Empty." );
             }
             return localConnection1;
         }
     }
 
-    public static boolean closeConnect(Connection paramConnection)
+    public static boolean closeConnect( Connection paramConnection )
     {
         int i = 0;
         try
         {
-            if((paramConnection != null) && (!paramConnection.isClosed()))
+            if ( (paramConnection != null) && (!paramConnection.isClosed()) )
             {
                 try
                 {
-                    if(!paramConnection.getAutoCommit())
+                    if ( !paramConnection.getAutoCommit() )
                     {
                         paramConnection.rollback();
                     }
-                }
-                catch (Exception localException1)
+                } catch ( Exception localException1 )
                 {
                 }
                 paramConnection.close();
                 paramConnection = null;
                 i = 1;
-            }
-            else
+            } else
             {
             }
-        }
-        catch (Exception localException2)
+        } catch ( Exception localException2 )
         {
             i = 0;
 
@@ -167,19 +160,19 @@ public final class DBconnectionMgr
 
     public static boolean disAllConnection()
     {
-        if(_$vector == null)
+        if ( _$vector == null )
         {
             return false;
         }
-        synchronized (_$vector)
+        synchronized ( _$vector )
         {
-            databaseLogMgr.errorLog("DBconnectionMgr", "disAllConnection",
-                    "disAllConnection ConHandle.");
+            databaseLogMgr.errorLog( "DBconnectionMgr", "disAllConnection",
+                    "disAllConnection ConHandle." );
 
-            while (_$vector.size() > 0)
+            while ( _$vector.size() > 0 )
             {
                 Connection localConnection;
-                closeConnect(localConnection = (Connection) _$vector.remove(0));
+                closeConnect( localConnection = (Connection)_$vector.remove( 0 ) );
             }
 
         }
@@ -196,7 +189,7 @@ public final class DBconnectionMgr
     {
         int i = 0;
 
-        if(_$vector != null)
+        if ( _$vector != null )
         {
             i = _$vector.size();
         }
@@ -230,16 +223,15 @@ public final class DBconnectionMgr
 
     public static boolean initConnection()
     {
-        if(_$vector.isEmpty())
+        if ( _$vector.isEmpty() )
         {
-            for (int i = 0; i < _$8; ++i)
+            for ( int i = 0; i < _$8; ++i )
             {
                 Connection localConnection;
-                if((localConnection = createConnection()) != null)
+                if ( (localConnection = createConnection()) != null )
                 {
-                    _$vector.add(localConnection);
-                }
-                else
+                    _$vector.add( localConnection );
+                } else
                 {
                     return false;
                 }
@@ -250,21 +242,21 @@ public final class DBconnectionMgr
         return true;
     }
 
-    public static boolean isCheckErrorMessage(String paramString)
+    public static boolean isCheckErrorMessage( String paramString )
     {
         int i = 0;
 
-        if((paramString != null) && (paramString.indexOf("死锁") > 0))
+        if ( (paramString != null) && (paramString.indexOf( "死锁" ) > 0) )
         {
-            _$1.error("DBconnectionMgr isCheckErrorMessage:" + paramString);
+            _$1.error( "DBconnectionMgr isCheckErrorMessage:" + paramString );
             i = 1;
         }
 
         return i == 0 ? false : true;
     }
 
-    public static Connection isConnectError(String paramString,
-            Connection paramConnection)
+    public static Connection isConnectError( String paramString,
+            Connection paramConnection )
     {
         Statement localStatement = null;
         boolean bool = false;
@@ -274,26 +266,24 @@ public final class DBconnectionMgr
         {
             try
             {
-                if((paramConnection != null) && (!paramConnection.isClosed()))
+                if ( (paramConnection != null) && (!paramConnection.isClosed()) )
                 {
-                    localStatement = paramConnection
-                            .createStatement(1003, 1007);
+                    localStatement = paramConnection.createStatement( 1003,
+                            1007 );
 
-                    if(BasicStringUtil.isNullString(str = getCheckConnSql()))
+                    if ( BasicStringUtil.isNullString( str = getCheckConnSql() ) )
                     {
 
                         str = "select 1 from dual";
 
                     }
-                    bool = localStatement.execute(str);
-                }
-                else
+                    bool = localStatement.execute( str );
+                } else
                 {
-                    closeConnect(paramConnection);
+                    closeConnect( paramConnection );
                     paramConnection = null;
                 }
-            }
-            catch (Exception localException1)
+            } catch ( Exception localException1 )
             {
                 try
                 {
@@ -301,37 +291,34 @@ public final class DBconnectionMgr
                     localStatement = null;
                     disAllConnection();
 
-                    _$1.error("远程数据库的网络故障:" + localException1.getMessage()
-                            + str);
-                }
-                catch (Exception localException3)
+                    _$1.error( "远程数据库的网络故障:" + localException1.getMessage()
+                            + str );
+                } catch ( Exception localException3 )
                 {
-                    _$1.error("断开远程数据库 Exception:"
-                            + localException3.getMessage() + str);
+                    _$1.error( "断开远程数据库 Exception:"
+                            + localException3.getMessage() + str );
                 }
             }
-        }
-        finally
+        } finally
         {
             try
             {
-                if(localStatement != null)
+                if ( localStatement != null )
                 {
                     localStatement.close();
                     localStatement = null;
                 }
-            }
-            catch (Exception localException2)
+            } catch ( Exception localException2 )
             {
-                _$1.error("isConnectError finally Exception:"
-                        + localException2.getMessage());
+                _$1.error( "isConnectError finally Exception:"
+                        + localException2.getMessage() );
             }
         }
 
         return paramConnection;
     }
 
-    public static boolean isValidConnect(Connection paramConnection)
+    public static boolean isValidConnect( Connection paramConnection )
     {
         Statement localStatement = null;
         boolean bool = false;
@@ -341,26 +328,24 @@ public final class DBconnectionMgr
         {
             try
             {
-                if((paramConnection != null) && (!paramConnection.isClosed()))
+                if ( (paramConnection != null) && (!paramConnection.isClosed()) )
                 {
-                    localStatement = paramConnection
-                            .createStatement(1003, 1007);
+                    localStatement = paramConnection.createStatement( 1003,
+                            1007 );
 
-                    if(BasicStringUtil.isNullString(str = getCheckConnSql()))
+                    if ( BasicStringUtil.isNullString( str = getCheckConnSql() ) )
                     {
 
                         str = "select 1 from dual";
 
                     }
-                    bool = localStatement.execute(str);
-                }
-                else
+                    bool = localStatement.execute( str );
+                } else
                 {
-                    closeConnect(paramConnection);
+                    closeConnect( paramConnection );
                     paramConnection = null;
                 }
-            }
-            catch (Exception localException1)
+            } catch ( Exception localException1 )
             {
                 try
                 {
@@ -368,30 +353,27 @@ public final class DBconnectionMgr
                     paramConnection = null;
                     disAllConnection();
 
-                    _$1.error("远程数据库的网络故障:" + localException1.getMessage()
-                            + str);
-                }
-                catch (Exception localException3)
+                    _$1.error( "远程数据库的网络故障:" + localException1.getMessage()
+                            + str );
+                } catch ( Exception localException3 )
                 {
-                    _$1.error("断开远程数据库 Exception:"
-                            + localException3.getMessage() + str);
+                    _$1.error( "断开远程数据库 Exception:"
+                            + localException3.getMessage() + str );
                 }
             }
-        }
-        finally
+        } finally
         {
             try
             {
-                if(localStatement != null)
+                if ( localStatement != null )
                 {
                     localStatement.close();
                     localStatement = null;
                 }
-            }
-            catch (Exception localException2)
+            } catch ( Exception localException2 )
             {
-                _$1.error("isValidConnect finally Exception:"
-                        + localException2.getMessage());
+                _$1.error( "isValidConnect finally Exception:"
+                        + localException2.getMessage() );
             }
         }
 
@@ -403,69 +385,69 @@ public final class DBconnectionMgr
         StringBuffer localStringBuffer = new StringBuffer();
 
         int i = getConnectionCount();
-        localStringBuffer.append("default=" + i + "<br>");
+        localStringBuffer.append( "default=" + i + "<br>" );
 
         return localStringBuffer.toString();
     }
 
-    public static synchronized void returnConnection(Connection paramConnection)
+    public static synchronized void returnConnection( Connection paramConnection )
     {
-        synchronized (_$vector)
+        synchronized ( _$vector )
         {
-            if(paramConnection != null)
+            if ( paramConnection != null )
             {
-                _$vector.add(paramConnection);
+                _$vector.add( paramConnection );
             }
             return;
         }
     }
 
-    public static boolean returnValidConnect(Connection paramConnection)
+    public static boolean returnValidConnect( Connection paramConnection )
     {
         int i = 0;
 
-        if(isValidConnect(paramConnection))
+        if ( isValidConnect( paramConnection ) )
         {
-            returnConnection(paramConnection);
+            returnConnection( paramConnection );
         }
 
         return i == 0 ? false : true;
     }
 
-    public static void setCheckConnSql(String paramString)
+    public static void setCheckConnSql( String paramString )
     {
         // BasicDbUtil.setCheckConnSql(paramString);
     }
 
-    public static void setClassName(String paramString)
+    public static void setClassName( String paramString )
     {
         _$6 = paramString;
     }
 
-    public static void setConnectionNumber(int paramInt)
+    public static void setConnectionNumber( int paramInt )
     {
         _$8 = paramInt;
     }
 
-    public static void setJDBCName(String paramString)
+    public static void setJDBCName( String paramString )
     {
         _$7 = paramString;
-        if(!_$vectors.containsKey(paramString))
-            _$vectors.put(paramString, new Vector());
-        _$vector = _$vectors.get(paramString);
+        if ( !_$vectors.containsKey( paramString ) )
+            _$vectors.put( paramString, new Vector() );
+        _$vector = _$vectors.get( paramString );
     }
 
-    public static void setMaxIdelNumber(int paramInt)
+    public static void setMaxIdelNumber( int paramInt )
     {
         _$9 = paramInt;
     }
 
-    public static void setPassword(String paramString)
+    public static void setPassword( String paramString )
     {
         _$5 = paramString;
     }
 
-    public static void setUserName(String paramString)
+    public static void setUserName( String paramString )
     {
         _$4 = paramString;
     }
