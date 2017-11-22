@@ -34,7 +34,7 @@ public class HtmlCreator
         sb.append( "<body>" );
         sb.append( "<div class='content-center'>" );
         sb.append( "<table class='tableui' cellpadding='4' cellspacing='2'>" );
-        sb.append( "<tbody><tr><td align='center'><b>ID</b></td><td align='center'><b>TOPIC_WORD</b></td><td align='center'><b>MEAN_CN</b>"
+        sb.append( "<tbody><tr><td></td><td align='center'><b>ID</b></td><td align='center'><b>TOPIC_WORD</b></td><td align='center'><b>MEAN_CN</b>"
                 + "</td><td align='center'><b>TIME</b></td><td align='center'><b>WEIGHT</b></td></tr></tbody>" );
         String rowstyle = "";
         for ( int i = inSentenceList.size() - 1; i >= 0; i-- )
@@ -47,7 +47,8 @@ public class HtmlCreator
                     .format(
                             "<tr class='"
                                     + rowstyle
-                                    + "'><td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td></tr>",
+                                    + "'><td>%d</td><td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td></tr>",
+                            (inSentenceList.size() - i),
                             String.valueOf( rowMap.get( "ID" ) ),
                             String.valueOf( rowMap.get( "TOPIC_WORD" ) ),
                             String.valueOf( rowMap.get( "MEAN_CN" ) ).replace(
@@ -60,7 +61,8 @@ public class HtmlCreator
         sb.append( "</table>" );
         if ( unKnown.size() > 0 )
         {
-            sb.append( "<h2>未知:" + StringUtils.join( unKnown, ", " ) + "</h2>" );
+            sb.append( "<h2>未知(" + unKnown.size() + "):"
+                    + StringUtils.join( unKnown, ", " ) + "</h2>" );
         }
         sb.append( "</div>" );
         sb.append( "</body>" );
@@ -76,9 +78,9 @@ public class HtmlCreator
      */
     private static void createCssFile()
     {
-        String s = ".content-center {margin:0 auto;text-align:center;width:1000px;}\r\n";
-        s += ".row-duplicate {background-color: #00a4b5;font-size: 20px;;}\r\n";
-        s += ".row-once {background-color: #eeeeee;font-size: 16px;;}\r\n";
+        String s = ".content-center {margin:0 auto;text-align:center;width:90%;}\r\n";
+        s += ".row-duplicate {font-color: red;background-color: #00a4b5;font-size: 16px;}\r\n";
+        s += ".row-once {background-color: #eeeeee;font-size: 16px;}\r\n";
         s += ".tableui{border:#ccc 1px solid;}\r\n";
         s += "table td{ border:1px solid #ccc;}\r\n";
         BasicFileUtil.writeFileString( MyAppParams.getCssPath(), s, "GBK",

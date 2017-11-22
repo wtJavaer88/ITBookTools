@@ -5,17 +5,14 @@ import com.wnc.basic.BasicFileUtil;
 
 public class MyAppParams {
 	private static MyAppParams instance = new MyAppParams();
-	public static String workSpace = "D:/用户目录/workspace-sts/ITBookTools/";
-	public static String sqliteName = "jdbc:sqlite:" + workSpace + "/database/itdict.db";
-	public static String logFolder = "D:/itbook/";
+	public static String sqliteName = "jdbc:sqlite:D:/用户目录/workspace-sts/ITBookTools/database/itdict.db";
+	public static String logFolder = "D:/itbook/log/";
 	public static String htmlFolder = "D:/itbook/reader/";
-	static {
-		BasicFileUtil.makeDirectory(logFolder);
-		BasicFileUtil.makeDirectory(htmlFolder);
-	}
+	public static String workSpace = "D:/用户目录/workspace-sts/ITBookTools/";
 
 	private MyAppParams() {
-
+		BasicFileUtil.makeDirectory(logFolder);
+		BasicFileUtil.makeDirectory(htmlFolder);
 	}
 
 	public static MyAppParams getInstance() {

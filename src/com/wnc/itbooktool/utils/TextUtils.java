@@ -7,15 +7,16 @@ public class TextUtils
 {
     public static boolean isSequence( String clipBoardContent )
     {
+        int size = PatternUtil.getAllPatternGroup( clipBoardContent,
+                "([a-zA-Z\\-_']+)" ).size();
         return !clipBoardContent.startsWith( "http" )
                 && !TextFormatUtil.containsChinese( clipBoardContent )
-                && PatternUtil.getAllPatternGroup( clipBoardContent,
-                        "([a-zA-Z]+)" ).size() > 1;
+                && size > 1 && size < 50;
     }
 
     public static boolean isSingleWord( String clipBoardContent )
     {
-        return clipBoardContent.matches( "[a-zA-Z_\\-]+" );
+        return clipBoardContent.matches( "[a-zA-Z]+" );
     }
 }
 

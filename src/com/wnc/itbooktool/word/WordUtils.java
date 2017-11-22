@@ -1,6 +1,7 @@
 package com.wnc.itbooktool.word;
 
 import com.wnc.itbooktool.dao.DictionaryDao;
+import com.wnc.string.PatternUtil;
 
 public class WordUtils
 {
@@ -16,7 +17,7 @@ public class WordUtils
         return null;
     }
 
-    public static boolean hasFindWord( String clipBoardContent, DicWord d )
+    private static boolean hasFindWord( String clipBoardContent, DicWord d )
     {
         return clipBoardContent.equalsIgnoreCase( d.getBase_word() )
                 || clipBoardContent.equalsIgnoreCase( d.getWord_done() )
@@ -40,5 +41,28 @@ public class WordUtils
             fw = DictionaryDao.findWord( clipBoardContent );
         }
         return fw;
+    }
+
+    /**
+     * 判断句子是否为上下文单词相关
+     * 
+     * @param clipboardString
+     * @return
+     */
+    public static boolean isContextRelative( String clipboardString )
+    {
+        clipboardString = clipboardString.trim();
+        for ( String word : PatternUtil.getAllPatternGroup( clipboardString,
+                "([a-zA-Z]+)" ) )
+        {
+            for ( DicWord d : OptedDictData.getSeekWordList() )
+            {
+                if ( d != null && hasFindWord( word, d ) )
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
