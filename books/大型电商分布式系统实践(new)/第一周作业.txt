@@ -1,0 +1,5 @@
+1.实现一种简单的通信协议
+
+2.使用spring mvc 完成RESTful风格的远程调用
+
+3.使用google的protocol buffers来完成对象的序列化
